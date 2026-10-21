@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LookNifty — AI Outfit Matcher</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #12100e;
+            --ink: #f3efe6;
+            --text: #f3efe6;
+            --muted: #a39b92;
+            --dark: #1c1916;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+            background: #0c0b0a;
+            color: var(--text);
+            min-height: 100vh;
+        }
+        main {
+            margin: 0; padding: 0; max-width: none; min-height: 100vh;
+            display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 0;
+            align-items: start;
+            background: var(--bg);
+        }
+        .look {
+            position: sticky; top: 0; width: 380px; align-self: start;
+            padding: 20px 18px 24px 20px;
+        }
+        .stage { position: relative; background: var(--bg); }
+        #pins { position: absolute; inset: 0; }
+        .stage img {
+            width: 100%; height: auto; max-height: none; object-fit: contain; object-position: center center;
+            display: block; background: var(--bg); border: 0; border-radius: 0;
+        }
+        .actions { display: flex; align-items: center; gap: 14px; margin-top: 14px; }
+        .side-meta { margin-top: 12px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+        .pin {
+            position: absolute; padding: 2px 6px; border: 0; border-radius: 0;
+            background: var(--dark); color: var(--ink); font-weight: 500; font-size: 11px;
+            cursor: pointer; transform: translate(-50%, -50%);
+        }
+        .sheet { padding: 32px 48px 72px 40px; }
+        .wordmark {
+            margin: 0 0 36px; font-size: 12px; font-weight: 500;
+            letter-spacing: 0.42em; text-indent: 0.42em;
+        }
+        .segments, .cats { display: flex; gap: 28px; flex-wrap: wrap; align-items: baseline; }
+        .segments { margin-bottom: 28px; }
+        button.seg, button.cat, button.text-btn {
+            border: 0; border-bottom: 1px solid transparent; border-radius: 0;
+            padding: 0 0 3px; margin: 0; cursor: pointer; background: transparent;
+            color: var(--muted); font: 500 15px/1.2 "Plus Jakarta Sans", system-ui, sans-serif;
+        }
+        button.seg.active, button.cat.active { color: var(--ink); border-bottom-color: var(--ink); }
+        .piece { margin-top: 42px; }
+        .piece-head { display: block; }
+        .piece h2 {
+            margin: 0; font-family: "Cormorant Garamond", serif;
+            font-size: 44px; font-weight: 500; letter-spacing: 0; line-height: 1;
+        }
+        .photo-sentence { margin: 8px 0 0; text-align: left; max-width: none; white-space: nowrap; font-size: 12px; line-height: 1.4; }
+        .match, .near { font-weight: 500; margin-right: 6px; }
+        .match { color: var(--ink); }
+        .near { color: var(--muted); }
+        .pct { color: var(--muted); font-size: 12px; font-weight: 500; }
+        .grid { display: flex; flex-direction: column; gap: 26px; margin-top: 18px; }
+        .outfit { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; margin-top: 18px; }
+        .outfit .card { grid-template-columns: 1fr; gap: 10px; }
+        .outfit .thumb { width: 100%; height: auto; aspect-ratio: 1; }
+        .outfit h3 { font-size: 26px; }
+        .card {
+            display: grid; grid-template-columns: 108px 1fr; gap: 18px; align-items: start;
+            background: transparent; border: 0; box-shadow: none; padding: 0;
+        }
+        .thumb { position: relative; width: 108px; height: 108px; overflow: hidden; margin: 0; background: #1a1612; border: 0; border-radius: 0; }
+        .thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .badge { position: absolute; top: 6px; right: 6px; font-size: 10px; font-weight: 600; padding: 2px 5px; border-radius: 0; border: 1px solid; }
+        .drop { position: absolute; bottom: 6px; left: 6px; background: var(--dark); color: var(--ink); font-size: 10px; font-weight: 600; padding: 2px 4px; }
+        .buy {
+            background: transparent; color: var(--ink); text-decoration: underline; text-underline-offset: 3px;
+            font-weight: 500; font-size: 13px; padding: 0;
+        }
+        .brand-name { color: var(--muted); font-size: 11px; font-weight: 500; letter-spacing: 0.04em; }
+        .price { color: var(--muted); font-weight: 500; font-size: 13px; }
+        .muted { color: var(--muted); font-size: 12px; }
+        .foot { display: flex; flex-wrap: wrap; align-items: baseline; gap: 14px 18px; margin-top: 8px; }
+        h3 {
+            margin: 2px 0 0; font-family: "Cormorant Garamond", serif;
+            font-size: 32px; font-weight: 500; letter-spacing: 0; line-height: 1;
+        }
+        .hint { font-size: 12px; color: var(--muted); margin: 0; }
+        select { position: absolute; width: 1px; height: 1px; opacity: 0; }
+        input[type=file] { color: var(--muted); font-size: 12px; max-width: 230px; }
+        @media (max-width: 800px) {
+            main { grid-template-columns: 1fr; }
+            .look { position: static; width: auto; padding: 0 0 8px; }
+            .actions, .side-meta { padding-left: 20px; padding-right: 20px; }
+            .sheet { padding: 24px 20px 48px; }
+            .piece h2 { font-size: 36px; }
+            .grid { display: flex; flex-direction: column; }
+        }
+        .wait {
+            position: fixed; inset: 0; z-index: 100;
+            display: none; align-items: center; justify-content: center; flex-direction: column; gap: 28px;
+            background: rgba(5, 8, 14, 0.86);
+        }
+        .wait.show { display: flex; }
+        .wait-ring {
+            width: 76px; height: 76px; border-radius: 50%;
+            border: 2px solid rgba(243, 244, 246, 0.22);
+            border-top-color: #f3f4f6;
+            animation: wait-spin 2.4s linear infinite;
+        }
+        .wait p {
+            margin: 0; max-width: 90vw;
+            font-size: 36px; font-weight: 600; line-height: 1.2; text-align: center;
+        }
+        @keyframes wait-spin { to { transform: rotate(360deg); } }
+        main[hidden], #intro[hidden] { display: none; }
+        #intro {
+            position: relative; min-height: 100vh; background: #0c0b0a;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; padding: 32px 24px 72px;
+        }
+        #intro .wordmark { margin: 0; }
+        #intro .lede { margin: 22px 0 0; font-size: 18px; line-height: 1.45; max-width: 22em; }
+        #intro .quiet { margin: 12px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; max-width: 28em; }
+        .slots { display: flex; flex-direction: column; align-items: center; gap: 6px; margin: 28px 0 0; min-height: 2.6em; }
+        .slots span { font-family: "Cormorant Garamond", serif; font-size: 28px; font-weight: 500; }
+        #intro .wordmark { opacity: 0; animation: enter-from-above 400ms ease-out forwards; }
+        #intro .lede { opacity: 0; animation: enter-from-below 500ms ease-out 200ms forwards; }
+        #intro .quiet { opacity: 0; animation: enter-fade 400ms ease-out 450ms forwards; }
+        #intro .slots { opacity: 0; animation: enter-fade 700ms ease-out 600ms forwards; }
+        #intro .pick { opacity: 0; pointer-events: auto; animation: enter-fade 300ms ease-out 1000ms forwards; }
+        #intro .privacy { animation: none; opacity: 1; }
+        @keyframes enter-fade { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes enter-from-above {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: none; }
+        }
+        @keyframes enter-from-below {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: none; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            #intro .wordmark, #intro .lede, #intro .quiet, #intro .slots, #intro .pick {
+                animation: none; opacity: 1; transform: none;
+            }
+        }
+        #intro .privacy {
+            position: absolute; left: 0; right: 0; bottom: 28px;
+            color: var(--muted); font-size: 12px; text-decoration: underline; text-underline-offset: 3px;
+        }
+        .page-privacy { margin: 48px 0 0; }
+        .page-privacy a { color: var(--muted); font-size: 12px; text-decoration: underline; text-underline-offset: 3px; }
+        .intro-actions { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 32px; flex-wrap: wrap; }
+        #file {
+            position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+            overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;
+        }
+        .pick {
+            border: 1px solid rgba(243, 239, 230, 0.72); border-radius: 0;
+            background: transparent; color: var(--ink); cursor: pointer;
+            padding: 9px 18px; font: 500 14px/1 "Plus Jakarta Sans", system-ui, sans-serif;
+        }
+        #intro .hint { margin-top: 14px; }
+    </style>
+</head>
+<body>
+    <div id="wait" class="wait" aria-live="polite">
+        <div class="wait-ring"></div>
+        <p>Parça okunuyor</p>
+    </div>
+    <div id="intro">
+        <p class="wordmark">LOOKNIFTY</p>
+        <p class="lede">Fotoğraftaki kombini üç farklı bütçede bul ve satın al.</p>
+        <p class="quiet">Üst giyim, alt giyim ve ayakkabı. Tıkla ve ürünün kendi sayfasına git.</p>
+        <p class="slots"><span>Tek bir fotoğraf.</span><span>Net bir kombin.</span></p>
+        <div class="intro-actions">
+            <label class="pick" for="file">Fotoğraf Seç</label>
+            <input id="file" type="file" accept="image/*">
+            <button class="text-btn" type="button" id="analyze-btn" hidden>Analiz et</button>
+        </div>
+        <p class="hint" id="status" hidden></p>
+        <a class="privacy" href="/gizlilik">Gizlilik</a>
+    </div>
+    <main hidden>
+        <section class="look">
+            <div class="stage">
+                <img id="outfit-image" alt="Seçilen kombin">
+                <div id="pins"></div>
+            </div>
+            <div class="actions" id="actions"></div>
+            <div class="side-meta">
+                <button class="text-btn" type="button" id="sync-btn">Feed'i yenile</button>
+                <p class="hint" id="catalog-stats"></p>
+            </div>
+        </section>
+        <section class="sheet">
+            <p class="wordmark">LOOKNIFTY</p>
+            <div class="segments">
+                <button class="seg" type="button" data-segment="Ekonomik">Ekonomik</button>
+                <button class="seg" type="button" data-segment="Ulaşılabilir">Ulaşılabilir</button>
+                <button class="seg" type="button" data-segment="Lüks">Lüks</button>
+            </div>
+            <select id="segment" aria-label="Segment">
+                <option value="Tümü">Tümü</option>
+                <option value="Ekonomik">Ekonomik</option>
+                <option value="Ulaşılabilir">Ulaşılabilir</option>
+                <option value="Lüks">Lüks</option>
+            </select>
+            <div class="cats" id="cats"></div>
+            <div id="products"></div>
+            <p class="page-privacy"><a href="/gizlilik">Gizlilik</a></p>
+        </section>
+    </main>
+    <script>
+        const SLOTS = ["Üst", "Alt", "Ayakkabı"];
+        let fullResults = [];
+        let analysis = null;
+        let activeCategory = "Tümü";
+
+        const segmentEl = document.getElementById("segment");
+        segmentEl.addEventListener("change", renderProducts);
+        document.querySelectorAll("[data-segment]").forEach(button => {
+            button.addEventListener("click", () => {
+                segmentEl.value = segmentEl.value === button.dataset.segment ? "Tümü" : button.dataset.segment;
+                markSegments();
+                renderProducts();
+            });
+        });
+        function markSegments() {
+            document.querySelectorAll("[data-segment]").forEach(button => {
+                button.classList.toggle("active", button.dataset.segment === segmentEl.value);
+            });
+        }
+        document.getElementById("analyze-btn").addEventListener("click", uploadAndAnalyze);
+        document.getElementById("sync-btn").addEventListener("click", syncCatalog);
+        document.getElementById("outfit-image").addEventListener("load", () => { if (analysis) renderPins(); });
+        window.addEventListener("resize", () => { if (analysis) renderPins(); });
+        document.getElementById("file").addEventListener("change", (e) => {
+            const f = e.target.files[0];
+            document.getElementById("analyze-btn").hidden = !f;
+            if (!f) return;
+            document.getElementById("outfit-image").src = URL.createObjectURL(f);
+        });
+
+        function badgeClass(segment) {
+            if (segment === "Lüks") return "background:rgba(243,239,230,.12);color:#f3efe6;border-color:rgba(243,239,230,.28)";
+            if (segment === "Ulaşılabilir") return "background:rgba(59,130,246,.2);color:#93c5fd;border-color:rgba(59,130,246,.3)";
+            return "background:rgba(16,185,129,.2);color:#6ee7b7;border-color:rgba(16,185,129,.3)";
+        }
+
+        function slotOf(value) {
+            const key = (value || "").toLocaleLowerCase("tr");
+            if (key.includes("ayakk")) return "Ayakkabı";
+            if (key.includes("alt") || key.includes("pant") || key.includes("jean")) return "Alt";
+            if (key.includes("üst") || key.includes("ust") || key.includes("göm") || key.includes("gom")) return "Üst";
+            return SLOTS.includes(value) ? value : "";
+        }
+
+        function slotItems() {
+            const found = new Map();
+            for (const item of analysis?.items || []) {
+                const slot = slotOf(item.category);
+                if (!slot || found.has(slot)) continue;
+                found.set(slot, item);
+            }
+            return SLOTS.filter(slot => found.has(slot)).map(slot => ({ slot, item: found.get(slot) }));
+        }
+
+        function setCats() {
+            const cats = ["Tümü", ...SLOTS];
+            const wrap = document.getElementById("cats");
+            wrap.innerHTML = cats.map(c => `<button class="cat ${c===activeCategory?'active':''}" data-cat="${c}">${c}</button>`).join("");
+            wrap.querySelectorAll("button").forEach(btn => btn.onclick = () => {
+                activeCategory = btn.dataset.cat;
+                setCats();
+                renderProducts();
+            });
+        }
+
+        function objectOffset(token, extra) {
+            if (token === "left" || token === "top") return 0;
+            if (token === "right" || token === "bottom") return extra;
+            if (token && token.endsWith("%")) return (parseFloat(token) / 100) * extra;
+            return extra / 2;
+        }
+
+        function containedPin(xPercent, yPercent) {
+            const img = document.getElementById("outfit-image");
+            const nw = img.naturalWidth;
+            const nh = img.naturalHeight;
+            const w = img.clientWidth;
+            const h = img.clientHeight;
+            if (!nw || !nh || !w || !h) return { x: xPercent, y: yPercent };
+            const scale = Math.min(w / nw, h / nh);
+            const dw = nw * scale;
+            const dh = nh * scale;
+            const parts = getComputedStyle(img).objectPosition.split(/\s+/);
+            const ox = objectOffset(parts[0], w - dw);
+            const oy = objectOffset(parts[1] || "center", h - dh);
+            return {
+                x: (ox + (xPercent / 100) * dw) / w * 100,
+                y: (oy + (yPercent / 100) * dh) / h * 100
+            };
+        }
+
+        function renderPins() {
+            const pins = slotItems();
+            document.getElementById("pins").innerHTML = pins.map(({ slot, item }, i) => {
+                const point = containedPin(item.hotspot_x ?? (48 + i * 4), item.hotspot_y ?? (28 + i * 30));
+                return `<button class="pin" style="left:${point.x}%;top:${point.y}%" data-piece="${slot}">${slot}</button>`;
+            }).join("");
+            document.querySelectorAll(".pin").forEach(pin => pin.onclick = () => {
+                activeCategory = pin.dataset.piece;
+                setCats();
+                renderProducts();
+            });
+        }
+
+        function cardHtml(prod) {
+            const pct = Math.round((prod.vector_similarity_score || 0) * 100);
+            const label = prod.match_label || "En yakın";
+            const score = `<span class="${label === "Eşleşme" ? "match" : "near"}">${label}</span><span class="pct">%${pct}</span>`;
+            return `
+                <article class="card">
+                    <div class="thumb">
+                        ${prod.image_url ? `<img src="${prod.image_url}" alt="${prod.title}">` : ""}
+                        <span class="badge" style="${badgeClass(prod.segment)}">${prod.segment}</span>
+                        ${prod.price_drop_alert ? `<span class="drop">Fiyatı düştü</span>` : ""}
+                    </div>
+                    <div>
+                        <div class="brand-name">${prod.brand}</div>
+                        <h3>${prod.title}</h3>
+                        <div class="foot">
+                            <span class="price">${prod.price_drop_alert && prod.old_price ? `<span class="muted" style="text-decoration:line-through;margin-right:6px">${prod.old_price} TL</span>` : ""}${prod.current_price} TL</span>
+                            <span>${score}</span>
+                            <a class="buy" href="/go/${prod.id}" target="_blank" rel="noopener">Satın Al</a>
+                        </div>
+                    </div>
+                </article>`;
+        }
+
+        function slotWinner(group, selected) {
+            return group.matched_alternatives.find(prod => prod.segment === selected) || null;
+        }
+
+        function renderProducts() {
+            const selected = segmentEl.value;
+            const box = document.getElementById("products");
+            const groups = SLOTS.map(slot => fullResults.find(group => group.target_piece === slot)).filter(Boolean);
+            const winners = selected === "Tümü" ? [] : groups.map(group => slotWinner(group, selected)).filter(Boolean);
+            const winnerIds = new Set(winners.map(prod => prod.id));
+            const kombin = winners.length ? `
+                <section class="piece">
+                    <div class="piece-head"><h2>Kombin</h2></div>
+                    <div class="outfit">${winners.map(prod => cardHtml(prod)).join("")}</div>
+                </section>` : "";
+            const lists = groups.filter(group => activeCategory === "Tümü" || group.target_piece === activeCategory).map(group => {
+                const cards = group.matched_alternatives.filter(prod => (selected === "Tümü" || prod.segment === selected) && !winnerIds.has(prod.id));
+                if (!cards.length) return "";
+                const sentence = (group.query_sentence || "").replace(/[&<>]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[ch]));
+                const photo = sentence ? `<p class="photo-sentence muted">${sentence}</p>` : "";
+                return `
+                    <section class="piece">
+                        <div class="piece-head">
+                            <h2>${group.target_piece}</h2>
+                            ${photo}
+                        </div>
+                        <div class="grid">${cards.map(prod => cardHtml(prod)).join("")}</div>
+                    </section>`;
+            }).join("");
+            box.innerHTML = kombin + lists;
+        }
+
+        async function applyMatch(data) {
+            fullResults = data.results || [];
+            analysis = {
+                items: data.items || [],
+                overall_style: data.overall_style,
+                color_palette: data.color_palette || []
+            };
+            document.getElementById("status").textContent =
+                `Vision: ${data.vision_source} · eşleşme ${data.engine_ms} ms`;
+            setCats();
+            markSegments();
+            renderPins();
+            renderProducts();
+        }
+
+        async function loadCatalogStats() {
+            const [stats, commerce] = await Promise.all([
+                fetch("/api/v1/catalog/stats").then(r => r.json()),
+                fetch("/api/v1/commerce/stats").then(r => r.json())
+            ]);
+            document.getElementById("catalog-stats").textContent =
+                `Katalog: ${stats.in_stock} ürün stokta · ${stats.price_drops} fiyat düşüşü · ${commerce.clicks} tıklama · ${commerce.affiliate_id}`;
+        }
+
+        async function syncCatalog() {
+            document.getElementById("catalog-stats").textContent = "Feed yenileniyor…";
+            const response = await fetch("/api/v1/catalog/sync", { method: "POST" });
+            if (!response.ok) {
+                document.getElementById("catalog-stats").textContent = "Feed yenilenemedi";
+                return;
+            }
+            await loadCatalogStats();
+            await fetchMatches();
+        }
+
+        async function fetchMatches() {
+            const vision = await fetch("/api/v1/mock-vision").then(r => r.json());
+            const response = await fetch("/api/v1/match", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(vision)
+            });
+            applyMatch(await response.json());
+            await loadCatalogStats();
+        }
+
+        function revealResults() {
+            document.getElementById("intro").hidden = true;
+            document.querySelector("main").hidden = false;
+            const actions = document.getElementById("actions");
+            actions.append(document.querySelector(".pick"), document.getElementById("file"), document.getElementById("analyze-btn"));
+            document.getElementById("analyze-btn").hidden = false;
+            document.querySelector(".side-meta").append(document.getElementById("status"));
+            loadCatalogStats();
+        }
+
+        async function uploadAndAnalyze() {
+            const file = document.getElementById("file").files[0];
+            if (!file) return;
+            const fd = new FormData();
+            fd.append("file", file);
+            const wait = document.getElementById("wait");
+            const status = document.getElementById("status");
+            wait.classList.add("show");
+            status.hidden = true;
+            try {
+                const response = await fetch("/api/v1/analyze", { method: "POST", body: fd });
+                if (!response.ok) {
+                    let message = "Analiz hatası";
+                    try {
+                        const body = await response.json();
+                        if (body && body.detail) message = body.detail;
+                    } catch (error) { /* yanıt JSON değilse genel mesaj kalsın */ }
+                    document.getElementById("status").textContent = message;
+                    return;
+                }
+                applyMatch(await response.json());
+                revealResults();
+            } finally {
+                wait.classList.remove("show");
+                status.hidden = false;
+            }
+        }
+
+    </script>
+</body>
+</html>

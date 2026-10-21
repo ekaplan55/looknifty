@@ -1,0 +1,207 @@
+{
+  "segments": [
+    "Ekonomik",
+    "Ulaşılabilir",
+    "Lüks"
+  ],
+  "slots": [
+    "Üst",
+    "Alt",
+    "Ayakkabı"
+  ],
+  "products": [
+    {
+      "id": "eko-ust-oxford",
+      "slot": "Üst",
+      "segment": "Ekonomik",
+      "brand": "LC Waikiki",
+      "name": "Regular fit oxford",
+      "sentence": "LC Waikiki regular fit oxford erkek gömlek beyaz pamuk",
+      "priceTry": 600,
+      "url": "https://www.lcw.com/regular-fit-oxford-erkek-basic-gomlek-beyaz-o-4827621",
+      "image": "",
+      "live": true
+    },
+    {
+      "id": "eko-alt-chino",
+      "slot": "Alt",
+      "segment": "Ekonomik",
+      "brand": "LC Waikiki",
+      "name": "Gabardin chino",
+      "sentence": "LC Waikiki regular fit gabardin chino erkek pantolon lacivert pamuk",
+      "priceTry": 600,
+      "url": "https://www.lcw.com/regular-fit-gabardin-erkek-chino-pantolon-lacivert-o-4352965",
+      "image": "",
+      "live": true
+    },
+    {
+      "id": "eko-ayak-klasik",
+      "slot": "Ayakkabı",
+      "segment": "Ekonomik",
+      "brand": "FOSCO",
+      "name": "Taba klasik",
+      "sentence": "FOSCO taba hakiki deri bağcıklı erkek klasik ayakkabı",
+      "priceTry": 2600,
+      "url": "https://www.flo.com.tr/urun/taba-hakiki-deri-erkek-klasik-ayakkabi-2807-m-201640158",
+      "image": "",
+      "live": true
+    },
+    {
+      "id": "eko-ust-keten",
+      "slot": "Üst",
+      "segment": "Ekonomik",
+      "brand": "SOUTHBLUE",
+      "name": "Regular fit keten gömlek",
+      "sentence": "SOUTHBLUE regular fit erkek gömlek ekru yüzde yüz keten",
+      "priceTry": 1200,
+      "url": "https://www.lcw.com/regular-fit-100-keten-erkek-gomlek-beyaz-o-5193732",
+      "image": "",
+      "live": true
+    },
+    {
+      "id": "eko-alt-chino-bej",
+      "slot": "Alt",
+      "segment": "Ekonomik",
+      "brand": "LC Waikiki",
+      "name": "Regular fit chino",
+      "sentence": "LC Waikiki regular fit erkek chino pantolon bej pamuk",
+      "priceTry": 500,
+      "url": "https://www.lcw.com/regular-fit-erkek-chino-pantolon-bej-o-5433585",
+      "image": "",
+      "live": true
+    },
+    {
+      "id": "eko-ayak-sneaker",
+      "slot": "Ayakkabı",
+      "segment": "Ekonomik",
+      "brand": "Ccway",
+      "name": "Beyaz sneaker",
+      "sentence": "Ccway beyaz erkek sneaker spor ayakkabı",
+      "priceTry": 1582,
+      "url": "https://www.flo.com.tr/urun/erkek-spor-ayakkabi-beyaz-beyaz-200910116",
+      "image": "",
+      "live": true
+    },
+    {
+      "id": "ula-ust-oxford",
+      "slot": "Üst",
+      "segment": "Ulaşılabilir",
+      "brand": "Zara",
+      "name": "Cepli oxford",
+      "sentence": "Zara cepli oxford erkek gömlek beyaz pamuk",
+      "priceTry": 990,
+      "url": "https://www.zara.com/tr/tr/cepli-oxford-gomlek-p01630999.html",
+      "image": "",
+      "live": true
+    },
+    {
+      "id": "ula-alt-takim",
+      "slot": "Alt",
+      "segment": "Ulaşılabilir",
+      "brand": "Zara",
+      "name": "Takım pantolonu",
+      "sentence": "Zara regular fit takım pantolonu erkek lacivert",
+      "priceTry": 2490,
+      "url": "https://www.zara.com/tr/tr/regular-fit-takim-pantolonu-p01081888.html?v1=588198806",
+      "image": "",
+      "live": true
+    },
+    {
+      "id": "ula-ayak-oxford",
+      "slot": "Ayakkabı",
+      "segment": "Ulaşılabilir",
+      "brand": "George Hogg",
+      "name": "Taba oxford",
+      "sentence": "George Hogg taba bağcıklı deri erkek oxford ayakkabı",
+      "priceTry": 4699,
+      "url": "https://www.divarese.com.tr/taba-erkek-deri-ayakkabi-p-42654",
+      "image": "",
+      "live": true
+    },
+    {
+      "id": "ula-ust-keten",
+      "slot": "Üst",
+      "segment": "Ulaşılabilir",
+      "brand": "Massimo Dutti",
+      "name": "Regular fit keten gömlek",
+      "sentence": "Massimo Dutti regular fit erkek gömlek beyaz yüzde yüz keten",
+      "priceTry": 5000,
+      "url": "https://www.massimodutti.com/tr/100-keten-regular-fit-gomlek-l01931265",
+      "image": "",
+      "live": true
+    },
+    {
+      "id": "ula-alt-relaxed",
+      "slot": "Alt",
+      "segment": "Ulaşılabilir",
+      "brand": "Massimo Dutti",
+      "name": "Relaxed fit pantolon",
+      "sentence": "Massimo Dutti relaxed fit erkek pantolon bej pamuk",
+      "priceTry": 5000,
+      "url": "https://www.massimodutti.com/tr/pens-detayl%C4%B1-relaxed-fit-pantolon-l00174005",
+      "image": "",
+      "live": true
+    },
+    {
+      "id": "ula-ayak-sneaker",
+      "slot": "Ayakkabı",
+      "segment": "Ulaşılabilir",
+      "brand": "George Hogg",
+      "name": "Beyaz deri sneaker",
+      "sentence": "George Hogg beyaz deri erkek sneaker",
+      "priceTry": 4799,
+      "url": "https://www.divarese.com.tr/beyaz-erkek-deri-sneaker-p-196275",
+      "image": "",
+      "live": true
+    },
+    {
+      "id": "luks-ust-oxford",
+      "slot": "Üst",
+      "segment": "Lüks",
+      "brand": "Beymen Club",
+      "name": "Non-iron oxford",
+      "sentence": "Beymen Club non-iron oxford erkek gömlek beyaz pamuk",
+      "priceTry": 4999,
+      "url": "https://www.beymen.com/tr/p_beymen-club-comfort-fit-beyaz-klasik-non-iron-oxford-gomlek_1769853",
+      "image": "",
+      "live": true
+    },
+    {
+      "id": "luks-alt-yun",
+      "slot": "Alt",
+      "segment": "Lüks",
+      "brand": "Beymen Collection",
+      "name": "Yün pantolon",
+      "sentence": "Beymen Collection lacivert yün erkek pantolon",
+      "priceTry": 5195,
+      "url": "https://www.beymen.com/tr/p_beymen-collection-lacivert-yun-pantolon_1906612",
+      "image": "",
+      "live": true
+    },
+    {
+      "id": "luks-ayak-deri",
+      "slot": "Ayakkabı",
+      "segment": "Lüks",
+      "brand": "Church's",
+      "name": "Taba deri ayakkabı",
+      "sentence": "Church's taba dana derisi erkek ayakkabı",
+      "priceTry": 50195,
+      "url": "https://www.beymen.com/tr/p_churchs-taba-erkek-deri-ayakkabi_1539475",
+      "image": "",
+      "live": true
+    },
+    {
+      "id": "eko-ust-tisort-proof",
+      "slot": "Üst",
+      "segment": "Ekonomik",
+      "brand": "LC Waikiki",
+      "name": "Lacivert tişört",
+      "sentence": "erkek lacivert tişört pamuk casual",
+      "priceTry": 199.99,
+      "url": "https://www.lcw.com/100-pamuk-regular-fit-basic-tisort-lacivert-o-5088242",
+      "image": "",
+      "live": true,
+      "purpose": "Skor kanıtı. Beyaz oxford cümlesi bu kaydı yenmeli."
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "products": [
+    {
+      "external_id": "adidas-stan-smith",
+      "category": "Ayakkabı",
+      "sub_category": "Sneaker",
+      "title": "Adidas Stan Smith Beyaz",
+      "brand": "Adidas",
+      "segment": "Ulaşılabilir",
+      "price": 2999.0,
+      "currency": "TRY",
+      "image_url": "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=600",
+      "affiliate_url": "https://example.com/sneaker-mid",
+      "description": "Beyaz klasik deri sneaker minimalist",
+      "availability": "in stock"
+    },
+    {
+      "external_id": "mavi-beyaz-sneaker",
+      "category": "Ayakkabı",
+      "sub_category": "Sneaker",
+      "title": "Mavi Beyaz Kanvas Sneaker",
+      "brand": "Mavi",
+      "segment": "Ekonomik",
+      "price": 899.0,
+      "currency": "TRY",
+      "image_url": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600",
+      "affiliate_url": "https://example.com/mavi-sneaker",
+      "description": "Beyaz kanvas sneaker ekonomik günlük",
+      "availability": "in stock"
+    }
+  ]
+}

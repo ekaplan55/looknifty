@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
+  <channel>
+    <title>LookNifty sample merchant feed</title>
+    <item>
+      <g:id>lcw-lacivert-chino</g:id>
+      <g:title>LCW Lacivert Chino</g:title>
+      <g:brand>LCW</g:brand>
+      <g:product_type>Alt Giyim &gt; Chino Pantolon</g:product_type>
+      <g:price>499.90 TRY</g:price>
+      <g:image_link>https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=600</g:image_link>
+      <g:link>https://example.com/chino-eco</g:link>
+      <g:availability>in stock</g:availability>
+      <description>Lacivert pamuklu chino pantolon günlük</description>
+    </item>
+  </channel>
+</rss>

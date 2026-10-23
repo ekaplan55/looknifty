@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LookNifty — AI Outfit Matcher</title>
+    <title>LookNifty</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -197,10 +197,7 @@
                 <div id="pins"></div>
             </div>
             <div class="actions" id="actions"></div>
-            <div class="side-meta">
-                <button class="text-btn" type="button" id="sync-btn">Feed'i yenile</button>
-                <p class="hint" id="catalog-stats"></p>
-            </div>
+            <div class="side-meta"></div>
         </section>
         <section class="sheet">
             <p class="wordmark">LOOKNIFTY</p>
@@ -241,7 +238,6 @@
             });
         }
         document.getElementById("analyze-btn").addEventListener("click", uploadAndAnalyze);
-        document.getElementById("sync-btn").addEventListener("click", syncCatalog);
         document.getElementById("outfit-image").addEventListener("load", () => { if (analysis) renderPins(); });
         window.addEventListener("resize", () => { if (analysis) renderPins(); });
         document.getElementById("file").addEventListener("change", (e) => {
@@ -396,21 +392,15 @@
         }
 
         async function loadCatalogStats() {
-            const [stats, commerce] = await Promise.all([
+            await Promise.all([
                 fetch("/api/v1/catalog/stats").then(r => r.json()),
                 fetch("/api/v1/commerce/stats").then(r => r.json())
             ]);
-            document.getElementById("catalog-stats").textContent =
-                `Katalog: ${stats.in_stock} ürün stokta · ${stats.price_drops} fiyat düşüşü · ${commerce.clicks} tıklama · ${commerce.affiliate_id}`;
         }
 
         async function syncCatalog() {
-            document.getElementById("catalog-stats").textContent = "Feed yenileniyor…";
             const response = await fetch("/api/v1/catalog/sync", { method: "POST" });
-            if (!response.ok) {
-                document.getElementById("catalog-stats").textContent = "Feed yenilenemedi";
-                return;
-            }
+            if (!response.ok) return;
             await loadCatalogStats();
             await fetchMatches();
         }

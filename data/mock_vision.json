@@ -1,0 +1,34 @@
+{
+  "source_image": "ofis-sonrasi",
+  "overall_style": "Smart Casual",
+  "color_palette": ["Beyaz", "Lacivert", "Taba"],
+  "items": [
+    {
+      "category": "Üst",
+      "sub_category": "Keten Gömlek",
+      "description": "erkek beyaz oxford gömlek, pamuk, smart casual",
+      "color": "Beyaz",
+      "style_tags": ["smart casual"],
+      "hotspot_x": 48,
+      "hotspot_y": 28
+    },
+    {
+      "category": "Alt",
+      "sub_category": "Chino",
+      "description": "erkek lacivert gabardin chino pantolon pamuk",
+      "color": "Lacivert",
+      "style_tags": ["smart casual"],
+      "hotspot_x": 52,
+      "hotspot_y": 62
+    },
+    {
+      "category": "Ayakkabı",
+      "sub_category": "Klasik",
+      "description": "erkek taba hakiki deri bağcıklı klasik ayakkabı",
+      "color": "Taba",
+      "style_tags": ["smart casual"],
+      "hotspot_x": 55,
+      "hotspot_y": 88
+    }
+  ]
+}

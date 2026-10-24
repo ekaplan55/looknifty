@@ -52,6 +52,7 @@
         }
         .segments, .cats { display: flex; gap: 28px; flex-wrap: wrap; align-items: baseline; }
         .segments { margin-bottom: 28px; }
+        .cats { margin-top: 36px; }
         button.seg, button.cat, button.text-btn {
             border: 0; border-bottom: 1px solid transparent; border-radius: 0;
             padding: 0 0 3px; margin: 0; cursor: pointer; background: transparent;
@@ -70,22 +71,47 @@
         .near { color: var(--muted); }
         .pct { color: var(--muted); font-size: 12px; font-weight: 500; }
         .grid { display: flex; flex-direction: column; gap: 26px; margin-top: 18px; }
-        .outfit { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; margin-top: 18px; }
-        .outfit .card { grid-template-columns: 1fr; gap: 10px; }
-        .outfit .thumb { width: 100%; height: auto; aspect-ratio: 1; }
-        .outfit h3 { font-size: 26px; }
+        .picked {
+            border: 1px solid rgba(243, 239, 230, 0.28);
+            padding: 22px 18px 26px;
+        }
+        .picked h2, .alts > h2 {
+            margin: 0; font-family: "Cormorant Garamond", serif;
+            font-size: 32px; font-weight: 500; line-height: 1; white-space: nowrap;
+        }
+        .picked-row {
+            display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-auto-flow: row; gap: 18px; align-items: start; margin-top: 18px;
+        }
+        .picked-slot { min-width: 0; }
+        .slot-label, .alt-slot {
+            margin: 0; color: var(--muted); font-size: 12px; font-weight: 500; letter-spacing: 0.08em;
+        }
+        .picked .photo-sentence { white-space: normal; margin-top: 6px; }
+        .picked .card { grid-template-columns: 1fr; gap: 10px; margin-top: 12px; }
+        .picked .thumb { width: 100%; height: auto; aspect-ratio: 1; }
+        .picked h3 { font-size: 26px; }
+        .alts { display: block; margin-top: 48px; }
+        .alt-empty { margin: 16px 0 0; }
+        .alt-piece { display: block; margin-top: 28px; }
+        .alts .grid { display: flex; flex-direction: column; gap: 16px; }
+        .card.is-small { grid-template-columns: 72px 1fr; gap: 12px; }
+        .card.is-small .thumb { width: 72px; height: 72px; }
+        .card.is-small h3 { font-size: 22px; }
+        .card.is-small .buy, .card.is-small .price, .card.is-small .brand-name { font-size: 12px; }
         .card {
             display: grid; grid-template-columns: 108px 1fr; gap: 18px; align-items: start;
             background: transparent; border: 0; box-shadow: none; padding: 0;
         }
         .thumb { position: relative; width: 108px; height: 108px; overflow: hidden; margin: 0; background: #1a1612; border: 0; border-radius: 0; }
-        .thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .thumb img { width: 100%; height: 100%; object-fit: contain; object-position: center center; }
         .badge { position: absolute; top: 6px; right: 6px; font-size: 10px; font-weight: 600; padding: 2px 5px; border-radius: 0; border: 1px solid; }
         .drop { position: absolute; bottom: 6px; left: 6px; background: var(--dark); color: var(--ink); font-size: 10px; font-weight: 600; padding: 2px 4px; }
         .buy {
             background: transparent; color: var(--ink); text-decoration: underline; text-underline-offset: 3px;
-            font-weight: 500; font-size: 13px; padding: 0;
+            font-weight: 500; font-size: 13px; padding: 0; white-space: nowrap;
         }
+        .buy-arrow { font-size: 0.8em; line-height: 1; }
         .brand-name { color: var(--muted); font-size: 11px; font-weight: 500; letter-spacing: 0.04em; }
         .price { color: var(--muted); font-weight: 500; font-size: 13px; }
         .muted { color: var(--muted); font-size: 12px; }
@@ -103,21 +129,38 @@
             .actions, .side-meta { padding-left: 20px; padding-right: 20px; }
             .sheet { padding: 24px 20px 48px; }
             .piece h2 { font-size: 36px; }
+            .picked-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .picked h3 { font-size: 16px; }
             .grid { display: flex; flex-direction: column; }
         }
         .wait {
-            position: fixed; inset: 0; z-index: 100;
+            position: fixed; inset: 0; z-index: 100; overflow: hidden;
             display: none; align-items: center; justify-content: center; flex-direction: column; gap: 28px;
-            background: rgba(5, 8, 14, 0.86);
+            background: #0c0b0a;
         }
         .wait.show { display: flex; }
+        .wait-blur {
+            position: absolute; inset: -48px; z-index: 0;
+            filter: blur(18px);
+        }
+        .wait-photo {
+            position: absolute; top: 48px; left: 48px;
+            width: calc(100% - 96px); height: calc(100% - 96px); max-height: none;
+            object-fit: contain; object-position: center center;
+        }
+        .wait-veil {
+            position: absolute; inset: 0; z-index: 1;
+            background: rgba(0, 0, 0, 0.38);
+        }
         .wait-ring {
+            position: relative; z-index: 2;
             width: 76px; height: 76px; border-radius: 50%;
             border: 2px solid rgba(243, 244, 246, 0.22);
             border-top-color: #f3f4f6;
             animation: wait-spin 2.4s linear infinite;
         }
         .wait p {
+            position: relative; z-index: 2;
             margin: 0; max-width: 90vw;
             font-size: 36px; font-weight: 600; line-height: 1.2; text-align: center;
         }
@@ -137,7 +180,7 @@
         #intro .lede { opacity: 0; animation: enter-from-below 500ms ease-out 200ms forwards; }
         #intro .quiet { opacity: 0; animation: enter-fade 400ms ease-out 450ms forwards; }
         #intro .slots { opacity: 0; animation: enter-fade 700ms ease-out 600ms forwards; }
-        #intro .pick { opacity: 0; pointer-events: auto; animation: enter-fade 300ms ease-out 1000ms forwards; }
+        #intro .pick, #intro .sample { opacity: 0; pointer-events: auto; animation: enter-fade 300ms ease-out 1000ms forwards; }
         #intro .privacy { animation: none; opacity: 1; }
         @keyframes enter-fade { from { opacity: 0; } to { opacity: 1; } }
         @keyframes enter-from-above {
@@ -149,16 +192,18 @@
             to { opacity: 1; transform: none; }
         }
         @media (prefers-reduced-motion: reduce) {
-            #intro .wordmark, #intro .lede, #intro .quiet, #intro .slots, #intro .pick {
+            #intro .wordmark, #intro .lede, #intro .quiet, #intro .slots, #intro .pick, #intro .sample {
                 animation: none; opacity: 1; transform: none;
             }
         }
         #intro .privacy {
             position: absolute; left: 0; right: 0; bottom: 28px;
+            display: flex; justify-content: center; gap: 18px;
+        }
+        #intro .privacy a, .page-privacy a {
             color: var(--muted); font-size: 12px; text-decoration: underline; text-underline-offset: 3px;
         }
-        .page-privacy { margin: 48px 0 0; }
-        .page-privacy a { color: var(--muted); font-size: 12px; text-decoration: underline; text-underline-offset: 3px; }
+        .page-privacy { margin: 48px 0 0; display: flex; gap: 18px; flex-wrap: wrap; }
         .intro-actions { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 32px; flex-wrap: wrap; }
         #file {
             position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
@@ -169,11 +214,18 @@
             background: transparent; color: var(--ink); cursor: pointer;
             padding: 9px 18px; font: 500 14px/1 "Plus Jakarta Sans", system-ui, sans-serif;
         }
-        #intro .hint { margin-top: 14px; }
+        #analyze-btn { display: none; }
+        .sample {
+            border: 0; background: none; padding: 0; cursor: pointer;
+            color: var(--muted); text-decoration: underline; text-underline-offset: 3px;
+            font: 400 12px/1 "Plus Jakarta Sans", system-ui, sans-serif;
+        }
     </style>
 </head>
 <body>
     <div id="wait" class="wait" aria-live="polite">
+        <div id="wait-blur" class="wait-blur"></div>
+        <div class="wait-veil"></div>
         <div class="wait-ring"></div>
         <p>Parça okunuyor</p>
     </div>
@@ -184,11 +236,16 @@
         <p class="slots"><span>Tek bir fotoğraf.</span><span>Net bir kombin.</span></p>
         <div class="intro-actions">
             <label class="pick" for="file">Fotoğraf Seç</label>
+            <button class="sample" type="button" id="sample-look">Örnek kombini gör</button>
             <input id="file" type="file" accept="image/*">
             <button class="text-btn" type="button" id="analyze-btn" hidden>Analiz et</button>
         </div>
         <p class="hint" id="status" hidden></p>
-        <a class="privacy" href="/gizlilik">Gizlilik</a>
+        <nav class="privacy" aria-label="Sayfalar">
+            <a href="/gizlilik">Gizlilik</a>
+            <a href="/hakkimizda">Hakkımızda</a>
+            <a href="/iletisim">İletişim</a>
+        </nav>
     </div>
     <main hidden>
         <section class="look">
@@ -212,9 +269,13 @@
                 <option value="Ulaşılabilir">Ulaşılabilir</option>
                 <option value="Lüks">Lüks</option>
             </select>
-            <div class="cats" id="cats"></div>
             <div id="products"></div>
-            <p class="page-privacy"><a href="/gizlilik">Gizlilik</a></p>
+            <div class="cats" id="cats"></div>
+            <p class="page-privacy">
+                <a href="/gizlilik">Gizlilik</a>
+                <a href="/hakkimizda">Hakkımızda</a>
+                <a href="/iletisim">İletişim</a>
+            </p>
         </section>
     </main>
     <script>
@@ -237,14 +298,38 @@
                 button.classList.toggle("active", button.dataset.segment === segmentEl.value);
             });
         }
-        document.getElementById("analyze-btn").addEventListener("click", uploadAndAnalyze);
+        document.getElementById("analyze-btn").addEventListener("click", () => uploadAndAnalyze());
         document.getElementById("outfit-image").addEventListener("load", () => { if (analysis) renderPins(); });
         window.addEventListener("resize", () => { if (analysis) renderPins(); });
+        let chooseLock = false;
+        function chooseFile(file) {
+            if (!file || chooseLock) return;
+            chooseLock = true;
+            const input = document.getElementById("file");
+            if (input.files[0] !== file) {
+                const transfer = new DataTransfer();
+                transfer.items.add(file);
+                input.files = transfer.files;
+            }
+            document.getElementById("outfit-image").src = URL.createObjectURL(file);
+            const status = document.getElementById("status");
+            status.hidden = false;
+            status.textContent = "Fotoğraf seçildi.";
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+                chooseLock = false;
+                uploadAndAnalyze(file);
+            }));
+        }
         document.getElementById("file").addEventListener("change", (e) => {
-            const f = e.target.files[0];
-            document.getElementById("analyze-btn").hidden = !f;
-            if (!f) return;
-            document.getElementById("outfit-image").src = URL.createObjectURL(f);
+            chooseFile(e.target.files[0]);
+        });
+        document.getElementById("sample-look").addEventListener("click", async () => {
+            if (document.getElementById("wait").classList.contains("show")) return;
+            const response = await fetch("/static/looks/oxford.jpg");
+            if (!response.ok) return;
+            const bytes = await response.arrayBuffer();
+            const file = new File([bytes], "oxford.jpg", { type: "image/jpeg" });
+            chooseFile(file);
         });
 
         function badgeClass(segment) {
@@ -321,12 +406,12 @@
             });
         }
 
-        function cardHtml(prod) {
+        function cardHtml(prod, extraClass) {
             const pct = Math.round((prod.vector_similarity_score || 0) * 100);
             const label = prod.match_label || "En yakın";
             const score = `<span class="${label === "Eşleşme" ? "match" : "near"}">${label}</span><span class="pct">%${pct}</span>`;
             return `
-                <article class="card">
+                <article class="card${extraClass ? ` ${extraClass}` : ""}">
                     <div class="thumb">
                         ${prod.image_url ? `<img src="${prod.image_url}" alt="${prod.title}">` : ""}
                         <span class="badge" style="${badgeClass(prod.segment)}">${prod.segment}</span>
@@ -338,42 +423,61 @@
                         <div class="foot">
                             <span class="price">${prod.price_drop_alert && prod.old_price ? `<span class="muted" style="text-decoration:line-through;margin-right:6px">${prod.old_price} TL</span>` : ""}${prod.current_price} TL</span>
                             <span>${score}</span>
-                            <a class="buy" href="/go/${prod.id}" target="_blank" rel="noopener">Satın Al</a>
+                            <a class="buy" href="/go/${prod.id}" target="_blank" rel="noopener">Satın Al <span class="buy-arrow" aria-hidden="true">↗</span></a>
                         </div>
                     </div>
                 </article>`;
         }
 
-        function slotWinner(group, selected) {
-            return group.matched_alternatives.find(prod => prod.segment === selected) || null;
+        function escapeText(value) {
+            return (value || "").replace(/[&<>]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[ch]));
+        }
+
+        function budgetPieces(groups, selected) {
+            return SLOTS.map(slot => {
+                const group = groups.find(item => item.target_piece === slot) || { target_piece: slot, query_sentence: "", matched_alternatives: [] };
+                const cards = (group.matched_alternatives || []).filter(prod => selected === "Tümü" || prod.segment === selected);
+                const winner = cards[0] || null;
+                const rest = cards.slice(1).filter(prod => !winner || prod.id !== winner.id);
+                return { slot, group, winner, rest };
+            });
         }
 
         function renderProducts() {
             const selected = segmentEl.value;
             const box = document.getElementById("products");
             const groups = SLOTS.map(slot => fullResults.find(group => group.target_piece === slot)).filter(Boolean);
-            const winners = selected === "Tümü" ? [] : groups.map(group => slotWinner(group, selected)).filter(Boolean);
-            const winnerIds = new Set(winners.map(prod => prod.id));
-            const kombin = winners.length ? `
-                <section class="piece">
-                    <div class="piece-head"><h2>Kombin</h2></div>
-                    <div class="outfit">${winners.map(prod => cardHtml(prod)).join("")}</div>
-                </section>` : "";
-            const lists = groups.filter(group => activeCategory === "Tümü" || group.target_piece === activeCategory).map(group => {
-                const cards = group.matched_alternatives.filter(prod => (selected === "Tümü" || prod.segment === selected) && !winnerIds.has(prod.id));
-                if (!cards.length) return "";
-                const sentence = (group.query_sentence || "").replace(/[&<>]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[ch]));
+            const pieces = budgetPieces(groups, selected);
+            const picked = pieces.map(({ slot, group, winner }) => {
+                const sentence = escapeText(group.query_sentence);
                 const photo = sentence ? `<p class="photo-sentence muted">${sentence}</p>` : "";
                 return `
-                    <section class="piece">
-                        <div class="piece-head">
-                            <h2>${group.target_piece}</h2>
-                            ${photo}
-                        </div>
-                        <div class="grid">${cards.map(prod => cardHtml(prod)).join("")}</div>
+                    <div class="picked-slot">
+                        <p class="slot-label">${slot}</p>
+                        ${photo}
+                        ${winner ? cardHtml(winner) : ""}
+                    </div>`;
+            }).join("");
+            const alts = pieces.map(({ slot, rest }) => {
+                if (!rest.length) return "";
+                return `
+                    <section class="alt-piece">
+                        <p class="alt-slot">${slot}</p>
+                        <div class="grid">${rest.map(prod => cardHtml(prod, "is-small")).join("")}</div>
                     </section>`;
             }).join("");
-            box.innerHTML = kombin + lists;
+            const altBody = alts
+                ? alts
+                : `<p class="alt-empty muted">Alternatif ürün şu anda bulunmamaktadır.</p>`;
+            box.innerHTML = `
+                <section class="picked">
+                    <h2>Seçili kombin</h2>
+                    <div class="picked-row">${picked}</div>
+                </section>
+                <section class="alts">
+                    <h2>Alternatifler</h2>
+                    ${altBody}
+                </section>`;
         }
 
         async function applyMatch(data) {
@@ -420,19 +524,21 @@
             document.getElementById("intro").hidden = true;
             document.querySelector("main").hidden = false;
             const actions = document.getElementById("actions");
-            actions.append(document.querySelector(".pick"), document.getElementById("file"), document.getElementById("analyze-btn"));
-            document.getElementById("analyze-btn").hidden = false;
+            actions.append(document.querySelector(".pick"), document.getElementById("file"));
             document.querySelector(".side-meta").append(document.getElementById("status"));
             loadCatalogStats();
         }
 
-        async function uploadAndAnalyze() {
-            const file = document.getElementById("file").files[0];
-            if (!file) return;
+        async function uploadAndAnalyze(file) {
+            const chosen = file instanceof File ? file : document.getElementById("file").files[0];
+            if (!chosen) return;
             const fd = new FormData();
-            fd.append("file", file);
+            fd.append("file", chosen, chosen.name);
             const wait = document.getElementById("wait");
             const status = document.getElementById("status");
+            const image = document.getElementById("outfit-image");
+            image.classList.add("wait-photo");
+            document.getElementById("wait-blur").appendChild(image);
             wait.classList.add("show");
             status.hidden = true;
             try {
@@ -449,8 +555,11 @@
                 applyMatch(await response.json());
                 revealResults();
             } finally {
+                image.classList.remove("wait-photo");
+                document.querySelector(".stage").insertBefore(image, document.getElementById("pins"));
                 wait.classList.remove("show");
                 status.hidden = false;
+                if (analysis) renderPins();
             }
         }
 

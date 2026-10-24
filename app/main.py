@@ -59,6 +59,16 @@ def gizlilik() -> FileResponse:
     return FileResponse(STATIC / "gizlilik.html")
 
 
+@app.get("/hakkimizda")
+def hakkimizda() -> FileResponse:
+    return FileResponse(STATIC / "hakkimizda.html")
+
+
+@app.get("/iletisim")
+def iletisim() -> FileResponse:
+    return FileResponse(STATIC / "iletisim.html")
+
+
 @app.get("/api/v1/health")
 def health() -> dict:
     return {
